@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TUUNEFORGE - Next Gen Performance</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- 3D Canvas Background -->
+    <canvas id="bg-canvas"></canvas>
+    
+    <!-- Custom Cursor -->
+    <div class="cursor-glow"></div>
+    <div class="cursor-dot"></div>
+    
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="nav-logo">
+            <i class="fas fa-bolt"></i>
+            <span>TUUNE<span class="highlight">FORGE</span></span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#products" class="nav-link">Ürünler</a></li>
+            <li><a href="#desktop" class="nav-link">Masaüstü</a></li>
+            <li><a href="#features" class="nav-link">Özellikler</a></li>
+            <li><a href="https://discord.gg/Z3pFqs3Yew" target="_blank" class="nav-link discord-link">
+                <i class="fab fa-discord"></i> Destek
+            </a></li>
+        </ul>
+        <button class="cta-nav-btn">Hemen Al</button>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <i class="fas fa-fire"></i>
+                <span>v3.0 YAYINDA</span>
+            </div>
+            <h1 class="hero-title">
+                <span class="glitch" data-text="PERFORMANSI">PERFORMANSI</span>
+                <span class="glitch" data-text="YENİDEN">YENİDEN</span>
+                <span class="gradient-text">KEŞFET</span>
+            </h1>
+            <p class="hero-desc">
+                FiveM optimizasyonu, Windows tweak'leri ve sistem güçlendirmesi için 
+                <span class="highlight">#1</span> dijital çözüm ortağınız.
+            </p>
+            <div class="hero-buttons">
+                <a href="#products" class="btn-primary pulse">
+                    <i class="fas fa-rocket"></i>
+                    <span>Başla</span>
+                </a>
+                <a href="#desktop" class="btn-secondary">
+                    <i class="fas fa-desktop"></i>
+                    <span>Masaüstü Uygulama</span>
+                </a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <span class="stat-num" data-target="50000">0</span>
+                    <span class="stat-label">Aktif Kullanıcı</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-num" data-target="99">0</span>
+                    <span class="stat-suffix">%</span>
+                    <span class="stat-label">Memnuniyet</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-num" data-target="24">0</span>
+                    <span class="stat-suffix">/7</span>
+                    <span class="stat-label">Destek</span>
+                </div>
+            </div>
+        </div>
+        <div class="hero-3d">
+            <div class="floating-card card-1">
+                <i class="fas fa-microchip"></i>
+                <span>CPU Optimize</span>
+            </div>
+            <div class="floating-card card-2">
+                <i class="fas fa-memory"></i>
+                <span>RAM Boost</span>
+            </div>
+            <div class="floating-card card-3">
+                <i class="fas fa-gamepad"></i>
+                <span>FiveM Ready</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section id="products" class="products-section">
+        <div class="section-header">
+            <span class="section-tag">PREMIUM ÇÖZÜMLER</span>
+            <h2 class="section-title">Gücünü <span class="gradient-text">Seç</span></h2>
+        </div>
+        <div class="products-grid">
+            <!-- FiveM Product -->
+            <div class="product-card" data-product="fivem">
+                <div class="card-glow"></div>
+                <div class="card-content">
+                    <div class="card-icon">
+                        <i class="fas fa-gamepad"></i>
+                    </div>
+                    <h3 class="card-title">FiveM <span class="highlight">Ultimate</span></h3>
+                    <p class="card-desc">FPS artışı, gecikme düşürme ve akıcı oyun deneyimi için kapsamlı optimizasyon paketi.</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> +60 FPS Ortalama</li>
+                        <li><i class="fas fa-check"></i> Gecikme Optimizasyonu</li>
+                        <li><i class="fas fa-check"></i> Özel Ayar Profilleri</li>
+                        <li><i class="fas fa-check"></i> Güncelleme Desteği</li>
+                    </ul>
+                    <div class="card-price">
+                        <span class="price-tag">₺799</span>
+                        <span class="price-note">Tek ödeme</span>
+                    </div>
+                    <button class="buy-btn" onclick="openDiscord()">
+                        <i class="fab fa-discord"></i>
+                        <span>Satın Al</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Windows Tweak -->
+            <div class="product-card featured" data-product="tweak">
+                <div class="card-glow"></div>
+                <div class="popular-badge">EN POPÜLER</div>
+                <div class="card-content">
+                    <div class="card-icon">
+                        <i class="fas fa-windows"></i>
+                    </div>
+                    <h3 class="card-title">Windows <span class="highlight">Pro Tweak</span></h3>
+                    <p class="card-desc">Windows sisteminizi tam potansiyeline çıkarın. Gereksiz servisler, arka plan işlemleri temizliği.</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> Boot Süresi Düşürme</li>
+                        <li><i class="fas fa-check"></i> Arka Plan Servis Temizliği</li>
+                        <li><i class="fas fa-check"></i> Registry Optimizasyonu</li>
+                        <li><i class="fas fa-check"></i> Güvenlik Ayarları</li>
+                    </ul>
+                    <div class="card-price">
+                        <span class="price-tag">₺499</span>
+                        <span class="price-note">Tek ödeme</span>
+                    </div>
+                    <button class="buy-btn" onclick="openDiscord()">
+                        <i class="fab fa-discord"></i>
+                        <span>Satın Al</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Combo Pack -->
+            <div class="product-card" data-product="combo">
+                <div class="card-glow"></div>
+                <div class="card-content">
+                    <div class="card-icon">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                    <h3 class="card-title">Complete <span class="highlight">Bundle</span></h3>
+                    <p class="card-desc">Tüm ürünler + özel masaüstü uygulama erişimi. En iyi değer paketi.</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> FiveM Ultimate</li>
+                        <li><i class="fas fa-check"></i> Windows Pro Tweak</li>
+                        <li><i class="fas fa-check"></i> Tuune Desktop App</li>
+                        <li><i class="fas fa-check"></i> Öncelikli Destek</li>
+                    </ul>
+                    <div class="card-price">
+                        <span class="old-price">₺1298</span>
+                        <span class="price-tag">₺999</span>
+                        <span class="price-note">%23 Tasarruf</span>
+                    </div>
+                    <button class="buy-btn" onclick="openDiscord()">
+                        <i class="fab fa-discord"></i>
+                        <span>Satın Al</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Desktop App Section -->
+    <section id="desktop" class="desktop-section">
+        <div class="desktop-bg"></div>
+        <div class="desktop-content">
+            <div class="desktop-text">
+                <span class="section-tag">YAZILIM</span>
+                <h2 class="section-title">
+                    Tuune <span class="gradient-text">Desktop</span>
+                </h2>
+                <p class="desktop-desc">
+                    Tarayıcıya gerek yok. Güçlü masaüstü uygulamamızla sisteminizi 
+                    anlık olarak optimize edin, performansı gerçek zamanlı izleyin.
+                </p>
+                <ul class="desktop-features">
+                    <li>
+                        <i class="fas fa-bolt"></i>
+                        <span>Anlık Sistem Analizi</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-cogs"></i>
+                        <span>1-Tık Optimizasyon</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-chart-line"></i>
+                        <span>Performans İzleme</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Otomatik Güncelleme</span>
+                    </li>
+                </ul>
+                <div class="download-section">
+                    <button class="download-btn" onclick="openDiscord()">
+                        <i class="fab fa-windows"></i>
+                        <span>İndir (Windows)</span>
+                    </button>
+                    <span class="version-tag">v3.0.1</span>
+                </div>
+            </div>
+            <div class="desktop-preview">
+                <div class="app-window">
+                    <div class="window-header">
+                        <div class="window-dots">
+                            <span></span><span></span><span></span>
+                        </div>
+                        <span class="window-title">TuuneForge Desktop</span>
+                    </div>
+                    <div class="window-content">
+                        <div class="app-sidebar">
+                            <div class="app-logo-small">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <div class="app-nav">
+                                <i class="fas fa-tachometer-alt active"></i>
+                                <i class="fas fa-sliders-h"></i>
+                                <i class="fas fa-chart-pie"></i>
+                                <i class="fas fa-cog"></i>
+                            </div>
+                        </div>
+                        <div class="app-main">
+                            <div class="performance-gauges">
+                                <div class="gauge">
+                                    <div class="gauge-circle cpu">
+                                        <span class="gauge-val">42%</span>
+                                    </div>
+                                    <span class="gauge-label">CPU</span>
+                                </div>
+                                <div class="gauge">
+                                    <div class="gauge-circle ram">
+                                        <span class="gauge-val">68%</span>
+                                    </div>
+                                    <span class="gauge-label">RAM</span>
+                                </div>
+                                <div class="gauge">
+                                    <div class="gauge-circle gpu">
+                                        <span class="gauge-val">35%</span>
+                                    </div>
+                                    <span class="gauge-label">GPU</span>
+                                </div>
+                            </div>
+                            <div class="optimize-btn-demo">
+                                <i class="fas fa-rocket"></i>
+                                <span>OPTIMIZE ET</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Grid -->
+    <section id="features" class="features-section">
+        <div class="section-header">
+            <span class="section-tag">NEDEN BİZ?</span>
+            <h2 class="section-title">Öne Çıkan <span class="gradient-text">Özellikler</span></h2>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-rocket"></i>
+                </div>
+                <h3>Hızlı Kurulum</h3>
+                <p>5 dakika içinde kurulum tamamlanır. Anında performans artışı.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-user-shield"></i>
+                </div>
+                <h3>Güvenli</h3>
+                <p>Microsoft onaylı yöntemler. Sisteminize zarar vermez.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-sync-alt"></i>
+                </div>
+                <h3>Sürekli Güncel</h3>
+                <p>Windows ve FiveM güncellemelerine anında uyum.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-headset"></i>
+                </div>
+                <h3>7/24 Destek</h3>
+                <p>Discord üzerinden anında teknik destek ekibi.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-crown"></i>
+                </div>
+                <h3>Premium Kalite</h3>
+                <p>Profesyonel yazılımcılar tarafından geliştirildi.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-infinity"></i>
+                </div>
+                <h3>Sınırsız Kullanım</h3>
+                <p>Tek ödeme, ömür boyu kullanım ve güncelleme.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="cta-bg"></div>
+        <div class="cta-content">
+            <h2 class="cta-title">Performansın <span class="gradient-text">Geleceği</span></h2>
+            <p class="cta-desc">Binlerce kullanıcı şu anda TuuneForge ile sisteminin potansiyelini maksimize ediyor.</p>
+            <button class="cta-btn pulse" onclick="openDiscord()">
+                <i class="fab fa-discord"></i>
+                <span>Discord'dan Ulaş</span>
+            </button>
+            <p class="cta-note">Geliştirici: <span class="highlight">lureka</span></p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <i class="fas fa-bolt"></i>
+                <span>TUUNE<span class="highlight">FORGE</span></span>
+                <p>Next-gen performans optimizasyonu</p>
+            </div>
+            <div class="footer-links">
+                <a href="#products">Ürünler</a>
+                <a href="#desktop">Masaüstü</a>
+                <a href="https://discord.gg/Z3pFqs3Yew" target="_blank">Discord</a>
+            </div>
+            <div class="footer-social">
+                <a href="https://discord.gg/Z3pFqs3Yew" target="_blank"><i class="fab fa-discord"></i></a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>© 2025 TuuneForge. Tüm hakları saklıdır.</span>
+            <span>Made with <i class="fas fa-fire"></i> by lureka</span>
+        </div>
+    </footer>
+
+    <!-- Discord Modal -->
+    <div class="modal-overlay" id="discordModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <div class="modal-icon">
+                <i class="fab fa-discord"></i>
+            </div>
+            <h3>Discord Sunucusuna Katıl</h3>
+            <p>Satın alım ve destek için Discord sunucumuza katılın.</p>
+            <a href="https://discord.gg/Z3pFqs3Yew" target="_blank" class="modal-btn">
+                <i class="fab fa-discord"></i>
+                <span>Katıl</span>
+            </a>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
