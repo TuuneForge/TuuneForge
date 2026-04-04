@@ -6,7 +6,7 @@
 // ==========================================
 // STATE MANAGEMENT
 // ==========================================
-const AppState = {
+const AppState = window.AppState || {
     currentUser: null,
     isLoggedIn: false,
     tickets: [],
