@@ -1115,6 +1115,7 @@ function initTickets() {
     // Open ticket modal
     newTicketBtn?.addEventListener('click', () => {
         openModal('ticket-modal');
+        initCustomDropdowns();
     });
     
     // Close ticket modal
@@ -1174,6 +1175,73 @@ function initTickets() {
         showToast('Ticket başarıyla oluşturuldu!', 'success');
         
         document.getElementById('new-ticket-form').reset();
+    });
+}
+
+// Custom Dropdown Initialization
+function initCustomDropdowns() {
+    const selects = document.querySelectorAll('#ticket-modal select');
+    
+    selects.forEach(select => {
+        // Skip if already initialized
+        if (select.parentElement.classList.contains('custom-select-wrapper')) return;
+        
+        const wrapper = document.createElement('div');
+        wrapper.className = 'custom-select-wrapper';
+        
+        const trigger = document.createElement('div');
+        trigger.className = 'custom-select-trigger';
+        trigger.innerHTML = `<span>${select.options[select.selectedIndex]?.text || 'Seçiniz...'}</span><i class="fas fa-chevron-down"></i>`;
+        
+        const optionsContainer = document.createElement('div');
+        optionsContainer.className = 'custom-select-options';
+        
+        Array.from(select.options).forEach((option, index) => {
+            if (index === 0 && option.value === '') return; // Skip placeholder
+            
+            const customOption = document.createElement('div');
+            customOption.className = 'custom-option';
+            customOption.textContent = option.text;
+            customOption.dataset.value = option.value;
+            
+            if (option.value === select.value) {
+                customOption.classList.add('selected');
+            }
+            
+            customOption.addEventListener('click', () => {
+                select.value = option.value;
+                trigger.querySelector('span').textContent = option.text;
+                
+                optionsContainer.querySelectorAll('.custom-option').forEach(opt => opt.classList.remove('selected'));
+                customOption.classList.add('selected');
+                wrapper.classList.remove('open');
+                
+                // Trigger change event
+                select.dispatchEvent(new Event('change'));
+            });
+            
+            optionsContainer.appendChild(customOption);
+        });
+        
+        trigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            // Close other open dropdowns
+            document.querySelectorAll('.custom-select-wrapper.open').forEach(w => {
+                if (w !== wrapper) w.classList.remove('open');
+            });
+            wrapper.classList.toggle('open');
+        });
+        
+        wrapper.appendChild(trigger);
+        wrapper.appendChild(optionsContainer);
+        
+        select.parentElement.insertBefore(wrapper, select);
+        select.style.display = 'none';
+    });
+    
+    // Close dropdowns on outside click
+    document.addEventListener('click', () => {
+        document.querySelectorAll('.custom-select-wrapper.open').forEach(w => w.classList.remove('open'));
     });
 }
 
