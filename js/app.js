@@ -6,56 +6,60 @@
 // ==========================================
 // STATE MANAGEMENT
 // ==========================================
-const AppState = window.AppState || {
-    currentUser: null,
-    isLoggedIn: false,
-    tickets: [],
-    cart: [],
-    products: {
-        tuneforge: { 
-            id: 'tuneforge',
-            name: 'Tune Forge Pro', 
-            price: 79.99,
-            icon: 'fa-tachometer-alt'
-        },
-        fivem: { 
-            id: 'fivem',
-            name: 'FiveM Ultimate Pack', 
-            price: 119.99,
-            icon: 'fa-gamepad'
-        },
-        tweak: { 
-            id: 'tweak',
-            name: 'System Optimizer', 
-            price: 29.99,
-            icon: 'fa-microchip'
-        },
-        fivemtweak: {
-            id: 'fivemtweak',
-            name: 'FiveM Tweak',
-            price: 19.99,
-            icon: 'fa-cogs'
-        },
-        windowstweak: {
-            id: 'windowstweak',
-            name: 'Windows Pro Tweak',
-            price: 39.99,
-            icon: 'fa-windows'
-        },
-        website: {
-            id: 'website',
-            name: 'Web Site Paketi',
-            price: 199.99,
-            icon: 'fa-globe'
-        },
-        application: {
-            id: 'application',
-            name: 'Özel Uygulama',
-            price: 0,
-            icon: 'fa-laptop-code'
+if (!window.AppState) {
+    window.AppState = {
+        currentUser: null,
+        isLoggedIn: false,
+        tickets: [],
+        cart: [],
+        products: {
+            tuneforge: { 
+                id: 'tuneforge',
+                name: 'Tune Forge Pro', 
+                price: 79.99,
+                icon: 'fa-tachometer-alt'
+            },
+            fivem: { 
+                id: 'fivem',
+                name: 'FiveM Ultimate Pack', 
+                price: 119.99,
+                icon: 'fa-gamepad'
+            },
+            tweak: { 
+                id: 'tweak',
+                name: 'System Optimizer', 
+                price: 29.99,
+                icon: 'fa-microchip'
+            },
+            fivemtweak: {
+                id: 'fivemtweak',
+                name: 'FiveM Tweak',
+                price: 19.99,
+                icon: 'fa-cogs'
+            },
+            windowstweak: {
+                id: 'windowstweak',
+                name: 'Windows Pro Tweak',
+                price: 39.99,
+                icon: 'fa-windows'
+            },
+            website: {
+                id: 'website',
+                name: 'Web Site Paketi',
+                price: 199.99,
+                icon: 'fa-globe'
+            },
+            application: {
+                id: 'application',
+                name: 'Özel Uygulama',
+                price: 0,
+                icon: 'fa-laptop-code'
+            }
         }
-    }
-};
+    };
+}
+
+const AppState = window.AppState;
 
 // Admin user data
 const ADMIN_USER = {
