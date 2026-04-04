@@ -61,26 +61,32 @@ if (!window.AppState) {
 
 var AppState = window.AppState;
 
-// Admin user data
-const ADMIN_USER = {
-    id: 999,
-    username: 'Admin',
-    email: 'admin@tuneforge.com',
-    password: 'admin123',
-    isAdmin: true,
-    createdAt: '2024-01-01'
-};
+// Admin user data - use window to avoid redeclaration
+if (!window.ADMIN_USER) {
+    window.ADMIN_USER = {
+        id: 999,
+        username: 'Admin',
+        email: 'admin@tuneforge.com',
+        password: 'admin123',
+        isAdmin: true,
+        createdAt: '2024-01-01'
+    };
+}
+const ADMIN_USER = window.ADMIN_USER;
 
 // All tickets storage (for admin view)
 let ALL_TICKETS = [];
 
 // Global Category Labels - avoid repetition
-const CATEGORY_LABELS = {
-    technical: 'Teknik Destek',
-    sales: 'Satış & Ödeme',
-    product: 'Ürün Desteği',
-    general: 'Genel'
-};
+if (!window.CATEGORY_LABELS) {
+    window.CATEGORY_LABELS = {
+        technical: 'Teknik Destek',
+        sales: 'Satış & Ödeme',
+        product: 'Ürün Desteği',
+        general: 'Genel'
+    };
+}
+const CATEGORY_LABELS = window.CATEGORY_LABELS;
 
 // ==========================================
 // UTILITY FUNCTIONS
@@ -128,149 +134,31 @@ function initLoader() {
 }
 
 // ==========================================
-// CUSTOM CURSOR
+// CUSTOM CURSOR - Disabled for performance
 // ==========================================
 function initCustomCursor() {
+    // Disable custom cursor for better performance
     const trail = document.querySelector('.cursor-trail');
     const dot = document.querySelector('.cursor-dot');
+    if (trail) trail.style.display = 'none';
+    if (dot) dot.style.display = 'none';
     
-    if (!trail || !dot) return;
-    
-    let mouseX = 0, mouseY = 0;
-    let trailX = 0, trailY = 0;
-    let dotX = 0, dotY = 0;
-    
-    document.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-    });
-    
-    function animateCursor() {
-        // Dot follows immediately
-        dotX += (mouseX - dotX) * 0.2;
-        dotY += (mouseY - dotY) * 0.2;
-        dot.style.transform = `translate(${dotX - 4}px, ${dotY - 4}px)`;
-        
-        // Trail follows with delay
-        trailX += (mouseX - trailX) * 0.1;
-        trailY += (mouseY - trailY) * 0.1;
-        trail.style.transform = `translate(${trailX - 20}px, ${trailY - 20}px)`;
-        
-        requestAnimationFrame(animateCursor);
-    }
-    
-    animateCursor();
-    
-    // Hover effects
-    const interactiveElements = document.querySelectorAll('a, button, .product-card, .service-card');
-    interactiveElements.forEach(el => {
-        el.addEventListener('mouseenter', () => {
-            trail.style.transform = `translate(${trailX - 20}px, ${trailY - 20}px) scale(1.5)`;
-            trail.style.borderColor = 'var(--secondary)';
-        });
-        el.addEventListener('mouseleave', () => {
-            trail.style.transform = `translate(${trailX - 20}px, ${trailY - 20}px) scale(1)`;
-            trail.style.borderColor = 'var(--primary)';
-        });
-    });
+    // Restore default cursor
+    document.body.style.cursor = 'auto';
 }
 
 // ==========================================
-// THREE.JS 3D BACKGROUND - ADVANCED
+// THREE.JS 3D BACKGROUND - DISABLED FOR PERFORMANCE
+// Using CSS gradient overlay instead
 // ==========================================
 function initThreeJS() {
+    // Three.js is disabled for better performance
+    // CSS gradient overlay in .gradient-overlay provides visual background
     const canvas = document.getElementById('bg-canvas');
-    if (!canvas) return;
-
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-    
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
-    // Create particle system with connections
-    const particlesGeometry = new THREE.BufferGeometry();
-    const particlesCount = 3000;
-    const posArray = new Float32Array(particlesCount * 3);
-    const colorArray = new Float32Array(particlesCount * 3);
-
-    for (let i = 0; i < particlesCount * 3; i += 3) {
-        // Positions - create a wave-like distribution
-        const x = (Math.random() - 0.5) * 60;
-        const y = (Math.random() - 0.5) * 60;
-        const z = (Math.random() - 0.5) * 60;
-        
-        posArray[i] = x;
-        posArray[i + 1] = y;
-        posArray[i + 2] = z;
-
-        // Colors - purple to cyan gradient
-        const mixFactor = Math.random();
-        colorArray[i] = mixFactor * 0.4 + (1 - mixFactor) * 0.02;     // R
-        colorArray[i + 1] = mixFactor * 0.3 + (1 - mixFactor) * 0.7;    // G
-        colorArray[i + 2] = mixFactor * 1 + (1 - mixFactor) * 0.9;      // B
+    if (canvas) {
+        canvas.style.display = 'none';
     }
-
-    particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-    particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colorArray, 3));
-
-    const particlesMaterial = new THREE.PointsMaterial({
-        size: 0.08,
-        vertexColors: true,
-        transparent: true,
-        opacity: 0.8,
-        blending: THREE.AdditiveBlending
-    });
-
-    const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
-    scene.add(particlesMesh);
-
-    camera.position.z = 20;
-
-    // Mouse tracking for parallax
-    let mouseX = 0;
-    let mouseY = 0;
-    let targetX = 0;
-    let targetY = 0;
-
-    document.addEventListener('mousemove', (event) => {
-        mouseX = (event.clientX - window.innerWidth / 2) * 0.001;
-        mouseY = (event.clientY - window.innerHeight / 2) * 0.001;
-    });
-
-    // Animation loop
-    const clock = new THREE.Clock();
-
-    function animate() {
-        requestAnimationFrame(animate);
-        const elapsedTime = clock.getElapsedTime();
-
-        // Rotate particles slowly
-        particlesMesh.rotation.y = elapsedTime * 0.03;
-        particlesMesh.rotation.x = Math.sin(elapsedTime * 0.02) * 0.1;
-
-        // Smooth camera movement based on mouse
-        targetX += (mouseX - targetX) * 0.05;
-        targetY += (mouseY - targetY) * 0.05;
-
-        camera.position.x += (mouseX * 8 - camera.position.x) * 0.05;
-        camera.position.y += (-mouseY * 8 - camera.position.y) * 0.05;
-        camera.lookAt(scene.position);
-
-        renderer.render(scene, camera);
-    }
-
-    animate();
-
-    // Handle resize with debounce
-    const handleResize = debounce(() => {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-    }, 250);
-    
-    window.addEventListener('resize', handleResize);
+    console.log('Three.js disabled for performance - using CSS background');
 }
 
 // ==========================================
