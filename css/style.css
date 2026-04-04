@@ -58,7 +58,7 @@ body {
     border-radius: 50%;
     position: fixed;
     pointer-events: none;
-    z-index: 9999;
+    z-index: 99999;
     transition: transform 0.15s, opacity 0.15s;
     mix-blend-mode: screen;
     box-shadow: 0 0 20px var(--primary), inset 0 0 20px rgba(99, 102, 241, 0.3);
@@ -71,7 +71,7 @@ body {
     border-radius: 50%;
     position: fixed;
     pointer-events: none;
-    z-index: 10000;
+    z-index: 100000;
     box-shadow: 0 0 10px var(--accent);
 }
 
@@ -480,6 +480,28 @@ body {
     text-transform: uppercase;
 }
 
+.custom-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 0.4rem 1rem;
+    background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+}
+
+.product-card.custom {
+    border: 2px solid #8b5cf6;
+    box-shadow: 0 0 40px rgba(139, 92, 246, 0.3);
+}
+
+.product-card.custom:hover {
+    box-shadow: 0 20px 60px rgba(139, 92, 246, 0.4);
+}
+
 .card-icon {
     width: 70px;
     height: 70px;
@@ -548,9 +570,21 @@ body {
     text-decoration: line-through;
 }
 
-.price-note {
-    font-size: 0.9rem;
-    color: var(--accent);
+.price-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+    color: var(--secondary);
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    background: rgba(6, 182, 212, 0.1);
+    border: 1px solid rgba(6, 182, 212, 0.3);
+    border-radius: 8px;
+}
+
+.price-info i {
+    color: #5865F2;
 }
 
 .buy-btn {
@@ -1082,6 +1116,7 @@ body {
     position: relative;
     transform: scale(0.9);
     transition: transform 0.3s;
+    cursor: default;
 }
 
 .modal-overlay.active .modal {
@@ -1096,7 +1131,7 @@ body {
     border: none;
     color: var(--gray);
     font-size: 1.5rem;
-    cursor: none;
+    cursor: pointer;
     transition: color 0.3s;
 }
 

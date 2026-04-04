@@ -181,7 +181,8 @@ function animateCounters() {
     const counters = document.querySelectorAll('.stat-num');
     
     counters.forEach(counter => {
-        const target = parseInt(counter.getAttribute('data-target'));
+        const target = parseFloat(counter.getAttribute('data-target'));
+        const isFloat = target % 1 !== 0;
         const duration = 2000;
         const start = performance.now();
         
@@ -189,12 +190,22 @@ function animateCounters() {
             const elapsed = currentTime - start;
             const progress = Math.min(elapsed / duration, 1);
             const easeProgress = 1 - Math.pow(1 - progress, 3);
-            const current = Math.floor(easeProgress * target);
+            let current = easeProgress * target;
             
-            counter.textContent = current.toLocaleString();
+            if (isFloat) {
+                counter.textContent = current.toFixed(1);
+            } else {
+                counter.textContent = Math.floor(current).toLocaleString();
+            }
             
             if (progress < 1) {
                 requestAnimationFrame(updateCounter);
+            } else {
+                if (isFloat) {
+                    counter.textContent = target.toFixed(1);
+                } else {
+                    counter.textContent = target.toLocaleString();
+                }
             }
         }
         
@@ -224,7 +235,7 @@ function initScrollAnimations() {
     }, observerOptions);
 
     // Observe elements
-    document.querySelectorAll('.product-card, .feature-card, .stat-item, .desktop-text').forEach(el => {
+    document.querySelectorAll('.product-card, .feature-card, .stat-item, .desktop-text, .hero-stats').forEach(el => {
         el.style.opacity = '0';
         el.style.transform = 'translateY(30px)';
         el.style.transition = 'all 0.6s ease';
