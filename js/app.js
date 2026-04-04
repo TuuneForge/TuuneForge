@@ -70,6 +70,43 @@ const ADMIN_USER = {
 // All tickets storage (for admin view)
 let ALL_TICKETS = [];
 
+// Global Category Labels - avoid repetition
+const CATEGORY_LABELS = {
+    technical: 'Teknik Destek',
+    sales: 'Satış & Ödeme',
+    product: 'Ürün Desteği',
+    general: 'Genel'
+};
+
+// ==========================================
+// UTILITY FUNCTIONS
+// ==========================================
+
+// Debounce utility - for performance optimization
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// Throttle utility - for scroll/mousemove events
+function throttle(func, limit) {
+    let inThrottle;
+    return function(...args) {
+        if (!inThrottle) {
+            func.apply(this, args);
+            inThrottle = true;
+            setTimeout(() => inThrottle = false, limit);
+        }
+    };
+}
+
 // ==========================================
 // LOADER
 // ==========================================
@@ -222,12 +259,14 @@ function initThreeJS() {
 
     animate();
 
-    // Handle resize
-    window.addEventListener('resize', () => {
+    // Handle resize with debounce
+    const handleResize = debounce(() => {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
-    });
+    }, 250);
+    
+    window.addEventListener('resize', handleResize);
 }
 
 // ==========================================
@@ -238,18 +277,43 @@ function initNavigation() {
     const hamburger = document.getElementById('hamburger');
     const navMenu = document.getElementById('nav-menu');
     
-    // Scroll effect
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-            navbar.classList.add('scrolled');
-        } else {
-            navbar.classList.remove('scrolled');
+    // Combined scroll handler for all scroll-related features
+    function handleScroll() {
+        // Navbar scroll effect
+        if (navbar) {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
         }
-    });
+        
+        // Active nav link
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-link');
+        
+        let current = '';
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            if (window.scrollY >= sectionTop - 200) {
+                current = section.getAttribute('id');
+            }
+        });
+        
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === `#${current}`) {
+                link.classList.add('active');
+            }
+        });
+    }
+    
+    // Single scroll event listener with debounce
+    window.addEventListener('scroll', debounce(handleScroll, 10));
     
     // Mobile menu
     hamburger?.addEventListener('click', () => {
-        navMenu.classList.toggle('active');
+        navMenu?.classList.toggle('active');
     });
     
     // Smooth scroll
@@ -259,29 +323,7 @@ function initNavigation() {
             const target = document.querySelector(this.getAttribute('href'));
             if (target) {
                 target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                navMenu.classList.remove('active');
-            }
-        });
-    });
-    
-    // Active nav link
-    const sections = document.querySelectorAll('section[id]');
-    const navLinks = document.querySelectorAll('.nav-link');
-    
-    window.addEventListener('scroll', () => {
-        let current = '';
-        sections.forEach(section => {
-            const sectionTop = section.offsetTop;
-            const sectionHeight = section.clientHeight;
-            if (scrollY >= sectionTop - 200) {
-                current = section.getAttribute('id');
-            }
-        });
-        
-        navLinks.forEach(link => {
-            link.classList.remove('active');
-            if (link.getAttribute('href') === `#${current}`) {
-                link.classList.add('active');
+                navMenu?.classList.remove('active');
             }
         });
     });
@@ -703,20 +745,13 @@ function loadAllTicketsForAdmin(filter = 'all') {
         return;
     }
     
-    const categoryLabels = {
-        technical: 'Teknik Destek',
-        sales: 'Satış & Ödeme',
-        product: 'Ürün Desteği',
-        general: 'Genel'
-    };
-    
     adminTicketsList.innerHTML = filteredTickets.map(ticket => `
         <div class="ticket-item">
             <div class="ticket-info">
                 <h4>${ticket.subject}</h4>
                 <div class="ticket-meta">
                     <span><i class="fas fa-user"></i> ${ticket.userEmail || 'Bilinmiyor'}</span>
-                    <span><i class="fas fa-folder"></i> ${categoryLabels[ticket.category] || ticket.category}</span>
+                    <span><i class="fas fa-folder"></i> ${CATEGORY_LABELS[ticket.category] || ticket.category}</span>
                     ${ticket.product ? `<span><i class="fas fa-box"></i> ${AppState.products[ticket.product]?.name || ticket.product}</span>` : ''}
                     <span><i class="fas fa-clock"></i> ${ticket.createdAt}</span>
                 </div>
@@ -759,12 +794,7 @@ function viewTicketDetails(ticketId) {
     const modal = document.getElementById('ticket-detail-modal');
     const content = document.getElementById('ticket-detail-content');
     
-    const categoryLabels = {
-        technical: 'Teknik Destek',
-        sales: 'Satış & Ödeme',
-        product: 'Ürün Desteği',
-        general: 'Genel'
-    };
+    const categoryLabels = CATEGORY_LABELS;
     
     // Load responses
     const responses = ticket.responses || [];
@@ -1264,19 +1294,14 @@ function updateTicketsList(filter = 'all') {
         return;
     }
     
-    const categoryLabels = {
-        technical: 'Teknik Destek',
-        sales: 'Satış & Ödeme',
-        product: 'Ürün Desteği',
-        general: 'Genel'
-    };
+    const categoryLabels = CATEGORY_LABELS;
     
     ticketsList.innerHTML = filteredTickets.map(ticket => `
         <div class="ticket-item" onclick="viewUserTicketDetails(${ticket.id})" style="cursor: pointer;">
             <div class="ticket-info">
                 <h4>${ticket.subject}</h4>
                 <div class="ticket-meta">
-                    <span><i class="fas fa-folder"></i> ${categoryLabels[ticket.category] || ticket.category}</span>
+                    <span><i class="fas fa-folder"></i> ${CATEGORY_LABELS[ticket.category] || ticket.category}</span>
                     ${ticket.product ? `<span><i class="fas fa-box"></i> ${AppState.products[ticket.product]?.name || ticket.product}</span>` : ''}
                     <span><i class="fas fa-clock"></i> ${ticket.createdAt}</span>
                 </div>
@@ -1299,12 +1324,7 @@ function viewUserTicketDetails(ticketId) {
     const modal = document.getElementById('ticket-detail-modal');
     const content = document.getElementById('ticket-detail-content');
     
-    const categoryLabels = {
-        technical: 'Teknik Destek',
-        sales: 'Satış & Ödeme',
-        product: 'Ürün Desteği',
-        general: 'Genel'
-    };
+    const categoryLabels = CATEGORY_LABELS;
     
     // Load responses
     const responses = ticket.responses || [];
@@ -1345,8 +1365,7 @@ function viewUserTicketDetails(ticketId) {
         </div>
     `;
     
-    modal.classList.add('active');
-    document.body.style.overflow = 'hidden';
+    openModal('ticket-detail-modal');
 }
 
 function updateTicketCounts() {

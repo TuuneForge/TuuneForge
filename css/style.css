@@ -2692,7 +2692,7 @@ select:hover {
     top: calc(100% + 8px);
     left: 0;
     right: 0;
-    background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+    background: #1a1a2e;
     border: 2px solid #6366f1;
     border-radius: 12px;
     max-height: 220px;
@@ -2703,9 +2703,8 @@ select:hover {
     transform: translateY(-15px) scale(0.95);
     transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     box-shadow: 
-        0 10px 40px rgba(0, 0, 0, 0.5),
-        0 0 30px rgba(99, 102, 241, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        0 10px 40px rgba(0, 0, 0, 0.8),
+        0 0 30px rgba(99, 102, 241, 0.3);
 }
 
 .custom-select-wrapper.open .custom-select-options {
@@ -2830,4 +2829,67 @@ select:hover {
         opacity: 1;
         transform: translateX(0);
     }
+}
+
+/* ===================================
+   PERFORMANCE OPTIMIZATIONS
+   =================================== */
+
+/* GPU acceleration for animated elements */
+.product-card,
+.service-card,
+.review-card,
+.cursor-trail,
+.cursor-dot,
+.loader-cube,
+.navbar {
+    will-change: transform;
+    transform: translateZ(0);
+}
+
+/* Content visibility for off-screen sections */
+section {
+    content-visibility: auto;
+    contain-intrinsic-size: 0 500px;
+}
+
+/* Contain layout for complex components */
+.products-grid,
+.services-grid,
+.reviews-slider {
+    contain: layout style;
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    
+    .product-card:hover,
+    .service-card:hover,
+    .review-card:hover {
+        transform: none;
+    }
+}
+
+/* Optimize repaints */
+.modal,
+.cart-sidebar,
+.toast {
+    will-change: transform, opacity;
+}
+
+/* Lazy loading optimization */
+img[loading="lazy"] {
+    transition: opacity 0.3s;
+}
+
+img[loading="lazy"]:not([src]) {
+    opacity: 0;
 }
