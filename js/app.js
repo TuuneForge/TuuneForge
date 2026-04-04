@@ -751,6 +751,11 @@ function viewTicketDetails(ticketId) {
     
     if (!ticket) return;
     
+    // Initialize attachment variables
+    window.currentTicketId = ticketId;
+    window.photoAttachments = window.photoAttachments || [];
+    window.videoAttachment = window.videoAttachment || null;
+    
     const modal = document.getElementById('ticket-detail-modal');
     const content = document.getElementById('ticket-detail-content');
     
@@ -852,11 +857,15 @@ function viewTicketDetails(ticketId) {
     window.photoAttachments = [];
     window.videoAttachment = null;
     
-    modal.classList.add('active');
+    openModal('ticket-detail-modal');
 }
 
 function previewPhotos(input) {
     const preview = document.getElementById('attachment-preview');
+    if (!preview) return;
+    
+    // Ensure photoAttachments is initialized
+    window.photoAttachments = window.photoAttachments || [];
     
     if (input.files && input.files.length > 0) {
         Array.from(input.files).forEach(file => {
@@ -968,6 +977,9 @@ function stopVideoRecord() {
 function sendAdminReply(ticketId) {
     const message = document.getElementById('admin-reply-message').value.trim();
     
+    // Ensure photoAttachments is initialized
+    window.photoAttachments = window.photoAttachments || [];
+    
     if (!message && window.photoAttachments.length === 0 && !window.videoAttachment) {
         showToast('Lütfen bir mesaj veya dosya ekleyin!', 'warning');
         return;
@@ -1008,9 +1020,13 @@ function sendAdminReply(ticketId) {
     allUserTickets[ticketIndex].responses.push(newResponse);
     localStorage.setItem('all_tickets', JSON.stringify(allUserTickets));
     
-    // Clear inputs
-    document.getElementById('admin-reply-message').value = '';
-    document.getElementById('attachment-preview').innerHTML = '';
+    // Clear inputs safely
+    const replyMessage = document.getElementById('admin-reply-message');
+    if (replyMessage) replyMessage.value = '';
+    
+    const attachmentPreview = document.getElementById('attachment-preview');
+    if (attachmentPreview) attachmentPreview.innerHTML = '';
+    
     window.photoAttachments = [];
     window.videoAttachment = null;
     
@@ -1031,6 +1047,61 @@ function updateTicketStatus(ticketId, newStatus) {
         closeModal('ticket-detail-modal');
         showToast('Ticket durumu güncellendi!', 'success');
     }
+}
+
+// ==========================================
+// DATA EXPORT/IMPORT
+// ==========================================
+function exportAllData() {
+    const data = {
+        users: JSON.parse(localStorage.getItem('tuneforge_users') || '[]'),
+        tickets: JSON.parse(localStorage.getItem('all_tickets') || '[]'),
+        exportedAt: new Date().toISOString()
+    };
+    
+    const dataStr = JSON.stringify(data, null, 2);
+    const blob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `tuneforge_backup_${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    
+    showToast('Veriler yedeklendi!', 'success');
+}
+
+function importAllData(input) {
+    const file = input.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const data = JSON.parse(e.target.result);
+            
+            if (data.users) {
+                localStorage.setItem('tuneforge_users', JSON.stringify(data.users));
+            }
+            if (data.tickets) {
+                localStorage.setItem('all_tickets', JSON.stringify(data.tickets));
+            }
+            
+            showToast('Veriler geri yüklendi! Sayfa yenileniyor...', 'success');
+            
+            setTimeout(() => {
+                window.location.reload();
+            }, 2000);
+        } catch (err) {
+            showToast('Dosya okunamadı! Geçersiz format.', 'error');
+            console.error('Import error:', err);
+        }
+    };
+    reader.readAsText(file);
+    input.value = '';
 }
 
 // ==========================================
@@ -1207,6 +1278,7 @@ function viewUserTicketDetails(ticketId) {
     `;
     
     modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
 }
 
 function updateTicketCounts() {
